@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Promedio de Semestre</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Promedio de Semestre</h1>
+    <table id="notasTable">
+        <thead>
+            <tr>
+                <th>Materia</th>
+                <th>Nota</th>
+                <th>Créditos</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" name="materia"></td>
+                <td><input type="number" name="nota" step="0.01"></td>
+                <td><input type="number" name="creditos" step="0.5"></td>
+                <td><button onclick="eliminarFila(this)">Eliminar</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button onclick="agregarFila()">Agregar Materia</button>
+    <button onclick="calcularPromedio()">Calcular Promedio</button>
+    <h2 id="resultado">Promedio: </h2>
+    <p>Dale gracias a Max Urbina</p>
+
+    <script>
+        function agregarFila() {
+            const table = document.getElementById('notasTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td><input type="text" name="materia"></td>
+                <td><input type="number" name="nota" step="0.01"></td>
+                <td><input type="number" name="creditos" step="0.5"></td>
+                <td><button onclick="eliminarFila(this)">Eliminar</button></td>
+            `;
+        }
+
+        function eliminarFila(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+
+        function calcularPromedio() {
+            const table = document.getElementById('notasTable');
+            const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+            let totalCreditos = 0;
+            let sumaPonderada = 0;
+            
+            for (let i = 0; i < rows.length; i++) {
+                const nota = parseFloat(rows[i].getElementsByTagName('input')[1].value);
+                const creditos = parseFloat(rows[i].getElementsByTagName('input')[2].value);
+                
+                if (!isNaN(nota) && !isNaN(creditos)) {
+                    sumaPonderada += nota * creditos;
+                    totalCreditos += creditos;
+                }
+            }
+            
+            const promedio = sumaPonderada / totalCreditos;
+            document.getElementById('resultado').innerText = `Promedio: ${promedio.toFixed(2)}`;
+        }
+    </script>
+</body>
+</html>
